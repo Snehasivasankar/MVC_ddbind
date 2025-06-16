@@ -1,0 +1,71 @@
+﻿@model MVC_ddbind.Models.UserInsert
+@{
+    ViewBag.Title = "Insert_Pageload";
+}
+
+<h2>Registration</h2>
+<div>
+    @using (Html.BeginForm("Insert_click", "DBInsert", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div>
+            <label>Name:</label>
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div>
+            <label>Age:</label>
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m.Age)
+            @Html.ValidationMessageFor(m => m.Age)
+        </div>
+        <div>
+            <label>States</label>
+        </div>
+        <div>
+            @Html.DropDownList("sId", new SelectList(ViewBag.Selstates, "Value", "Text"), "Select State", new { @class = "form-control", @id = "state-ddl" })
+
+        </div>
+        <div>
+            <label>Districts</label>
+        </div>
+        <div>
+            <select id="district-ddl" class="form-control" name="DistrictId"></select>
+
+        </div>
+        <div>
+            <label>Photo:</label>
+        </div>
+        <div>
+            @Html.TextBox("file", "", new { type = "file" })
+        </div>
+        <div>
+            <input type="submit" value="Insert" />
+            @Html.DisplayFor(m => m.msg)
+        </div>
+        <script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.10.2.js" type="text/javascript"></script>
+                        <script>
+    $('#district-ddl').append('<option>Select District</option>');
+     $('#state-ddl').change(function () {
+         var stateId = $(this).val();
+         $.ajax({
+             url: '@Url.Action("GetDistricts", "DBInsert")',
+             //type: 'GET',
+             data: { stateId: stateId },
+             //dataType: 'json',
+             success: function (data) {
+                 $('#district-ddl').empty();
+                 $('#district-ddl').append('<option>Select District</option>');
+                 $.each(data, function (index, item) {
+                     $('#district-ddl').append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                 });
+             }
+         });
+     });
+   </script>
+                    }
+
+</div>
+
